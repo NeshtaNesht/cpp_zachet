@@ -17,8 +17,8 @@
  */
 #include <iostream>
 #include <vector>
-#include <ctime>
 #include <random>
+#include <algorithm>
 
 const int _MAX_VALUE_ = 10; // Максимальное кол-во примеров
 const int _EXCELLENT_ = 10; // Кол-во правильных ответов на оценку "отлично"
@@ -28,6 +28,7 @@ const int RND_MAX = 32767;
 
 void genVector(std::vector<int>* table, std::vector<int>* table2) {
 	// Сгенерим 10 случайных чисел
+
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_int_distribution<int> uid(1, _MAX_VALUE_);
@@ -36,17 +37,20 @@ void genVector(std::vector<int>* table, std::vector<int>* table2) {
 	std::mt19937 gen2(rd2());
 	std::uniform_int_distribution<int> uid2(1, _MAX_VALUE_);
 
-	for (int i = 0; i < _MAX_VALUE_; i++) {
-		table->insert(table->end(), uid(gen));
-	}
-	for (int i = 0; i < _MAX_VALUE_; i++) {
-		table2->insert(table2->end(), uid2(gen2));
-	}
+	std::generate(table->begin(), table->begin() + table->size(), [&uid, &gen]() -> int { return uid(gen); });
+	std::generate(table2->begin(), table2->begin() + table2->size(), [&uid2, &gen2]() -> int { return uid2(gen2); });
+
+//	for (int i = 0; i < _MAX_VALUE_; i++) {
+//		table->insert(table->end(), uid(gen));
+//	}
+//	for (int i = 0; i < _MAX_VALUE_; i++) {
+//		table2->insert(table2->end(), uid2(gen2));
+//	}
 }
 
 int main() {
-	std::vector<int> first;
-	std::vector<int> second;
+	std::vector<int> first(_MAX_VALUE_);
+	std::vector<int> second(_MAX_VALUE_);
 	std::vector<int> answers;
 	int countRight = 0;
 	genVector(&first, &second);
