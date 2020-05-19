@@ -18,6 +18,7 @@
 #include <iostream>
 #include <vector>
 #include <ctime>
+#include <random>
 
 const int _MAX_VALUE_ = 10; // Максимальное кол-во примеров
 const int _EXCELLENT_ = 10; // Кол-во правильных ответов на оценку "отлично"
@@ -25,34 +26,30 @@ const int _GOOD_ = 8; // Кол-во правильных ответов на о
 const int _SATISF_ = 5; // Кол-во правильных ответов на оценку "удовлетворительно"
 const int RND_MAX = 32767;
 
-// Не юзаем стандартные функции языка C, а пишем свой рандомайзер
-
-static unsigned long int next = 1;
-
-int super_random_generator() {
-	next = next * 9999999 + 99887;
-	return (unsigned int)(next/65536) % (RND_MAX + 1);
-}
-
-void new_srand(unsigned int seed) {
-	next = seed;
-}
-
-void genVector(std::vector<int>* table) {
+void genVector(std::vector<int>* table, std::vector<int>* table2) {
 	// Сгенерим 10 случайных чисел
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<int> uid(1, _MAX_VALUE_);
+
+	std::minstd_rand0 rd2;
+	std::mt19937 gen2(rd2());
+	std::uniform_int_distribution<int> uid2(1, _MAX_VALUE_);
+
 	for (int i = 0; i < _MAX_VALUE_; i++) {
-		table->insert(table->end(), 1 + super_random_generator() % _MAX_VALUE_);
+		table->insert(table->end(), uid(gen));
+	}
+	for (int i = 0; i < _MAX_VALUE_; i++) {
+		table2->insert(table2->end(), uid2(gen2));
 	}
 }
 
 int main() {
-	new_srand(std::time(0));
 	std::vector<int> first;
 	std::vector<int> second;
 	std::vector<int> answers;
 	int countRight = 0;
-	genVector(&first);
-	genVector(&second);
+	genVector(&first, &second);
 	std::cout << "Проверка знания таблицы умножения" << std::endl;
 	for(int i = 1; i <= _MAX_VALUE_; i++) {
 		// Пройдемся по всем ответам и найдем совпадения
