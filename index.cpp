@@ -3,6 +3,17 @@
  *
  *  Created on: 19 мая 2020 г.
  *      Author: Мурашов А.А.
+ *      Задача 1
+ *			Написать программу, проверяющую знание таблицы умножения. Программа
+ *			должна случайным образом генерировать десять примеров, которые не
+ *			должны повторяться. В конце работы программа должна выводить результат
+ *			проверки (количество правильных и неправильных ответов) и оценку по
+ *			шкале «Отлично – Хорошо – Удовлетворительно – Неудовлетворительно».
+ *			Для генерации случайных чисел использовать только возможности библиотеки
+ *			C++, функции библиотеки языка C (такие как rand(), srand(), time())
+ *			использовать нельзя.
+ *
+ *
  */
 #include <iostream>
 #include <vector>
@@ -12,22 +23,36 @@ const int _MAX_VALUE_ = 10; // Максимальное кол-во пример
 const int _EXCELLENT_ = 10; // Кол-во правильных ответов на оценку "отлично"
 const int _GOOD_ = 8; // Кол-во правильных ответов на оценку "Хорошо"
 const int _SATISF_ = 5; // Кол-во правильных ответов на оценку "удовлетворительно"
+const int RND_MAX = 32767;
 
-void gen(std::vector<int>* table) {
+// Не юзаем стандартные функции языка C, а пишем свой рандомайзер
+
+static unsigned long int next = 1;
+
+int super_random_generator() {
+	next = next * 9999999 + 99887;
+	return (unsigned int)(next/65536) % (RND_MAX + 1);
+}
+
+void new_srand(unsigned int seed) {
+	next = seed;
+}
+
+void genVector(std::vector<int>* table) {
 	// Сгенерим 10 случайных чисел
 	for (int i = 0; i < _MAX_VALUE_; i++) {
-		table->insert(table->end(), 1 + rand() % _MAX_VALUE_);
+		table->insert(table->end(), 1 + super_random_generator() % _MAX_VALUE_);
 	}
 }
 
 int main() {
-	std::srand(std::time(0));
+	new_srand(std::time(0));
 	std::vector<int> first;
 	std::vector<int> second;
 	std::vector<int> answers;
 	int countRight = 0;
-	gen(&first);
-	gen(&second);
+	genVector(&first);
+	genVector(&second);
 	std::cout << "Проверка знания таблицы умножения" << std::endl;
 	for(int i = 1; i <= _MAX_VALUE_; i++) {
 		// Пройдемся по всем ответам и найдем совпадения
