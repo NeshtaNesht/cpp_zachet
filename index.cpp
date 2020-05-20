@@ -43,7 +43,6 @@ void genVector(std::vector<int>* table, std::vector<int>* table2) {
 
 	std::generate(table->begin(), table->begin() + table->size(), [&uid, &gen]() -> int { return uid(gen); });
 	std::generate(table2->begin(), table2->begin() + table2->size(), [&uid2, &gen2]() -> int { return uid2(gen2); });
-	delete q;
 }
 
 int main() {
