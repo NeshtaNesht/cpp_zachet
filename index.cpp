@@ -32,7 +32,7 @@ int genNumber() {
 	auto in_time_t = std::chrono::system_clock::to_time_t(now);
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	gen.seed(in_time_t);
+	//gen.seed(in_time_t);
 	std::uniform_int_distribution<int> uid(1, _MAX_VALUE_);
 	return uid(gen);
 }
@@ -43,12 +43,12 @@ void genVector(std::vector<int>* table, std::vector<int>* table2) {
 	auto in_time_t = std::chrono::system_clock::to_time_t(now);
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	gen.seed(in_time_t);
+	//gen.seed(in_time_t);
 	std::uniform_int_distribution<int> uid(1, _MAX_VALUE_);
 
 	std::minstd_rand0 rd2;
 	std::mt19937 gen2(rd2());
-	gen2.seed(in_time_t/2);
+	//gen2.seed(in_time_t/2);
 	std::uniform_int_distribution<int> uid2(1, _MAX_VALUE_);
 
 	std::generate(table->begin(), table->begin() + table->size(), [&uid, &gen]() -> int { return uid(gen); });
