@@ -27,36 +27,33 @@ const int _GOOD_ = 8; // Кол-во правильных ответов на о
 const int _SATISF_ = 5; // Кол-во правильных ответов на оценку "удовлетворительно"
 const int RND_MAX = 32767;
 
-class Rnd {
-public:
-	int genNumber() {
-		std::random_device rd;
-		std::mt19937 gen(rd());
-		std::uniform_int_distribution<int> uid(1, _MAX_VALUE_);
-		return uid(gen);
-	}
-	void genVector(std::vector<int>* table, std::vector<int>* table2) {
-			// Сгенерим 10 случайных чисел
-		std::generate(table->begin(), table->begin() + table->size(), [this]() -> int { return genNumber(); });
-		std::generate(table2->begin(), table2->begin() + table2->size(), [this]() -> int { return genNumber(); });
-	}
-};
+std::random_device rd;
+std::mt19937 gen(rd());
+std::uniform_int_distribution<int> uid(1, _MAX_VALUE_);
+
+int genNumber() {
+	return uid(gen);
+}
+void genVector(std::vector<int>* table, std::vector<int>* table2) {
+	// Сгенерим 10 случайных чисел
+	std::generate(table->begin(), table->begin() + table->size(), []() -> int { return uid(gen); });
+	std::generate(table2->begin(), table2->begin() + table2->size(), []() -> int { return uid(gen); });
+}
 
 int main() {
 	std::vector<int> first(_MAX_VALUE_);
 	std::vector<int> second(_MAX_VALUE_);
 	std::vector<int> answers;
 	int countRight = 0;
-	Rnd rn;
-	rn.genVector(&first, &second);
+	genVector(&first, &second);
 	std::cout << "Проверка знания таблицы умножения" << std::endl;
 	for(int i = 1; i <= _MAX_VALUE_; i++) {
 		// Пройдемся по всем ответам и найдем совпадения
 		for(int n : answers) {
 			if (n == (first[i-1] * second[i-1])) {
 				// Если совпадения есть - генерируем новые числа
-				first[i-1] = rn.genNumber() % _MAX_VALUE_;
-				second[i-1] = rn.genNumber() % _MAX_VALUE_;
+				first[i-1] = genNumber() % _MAX_VALUE_;
+				second[i-1] = genNumber() % _MAX_VALUE_;
 			}
 			// std::cout << "Ответы: " << n << std::endl;
 		}
